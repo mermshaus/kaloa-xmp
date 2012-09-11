@@ -22,7 +22,7 @@ Code analysis:
     $ phpmd ./src text codesize,design,naming
 
 
-Package-specfic hints
+Package-specfic notes
 =====================
 
 exiv2 <http://www.exiv2.org/> is a useful tool to work with image files. Here
@@ -30,7 +30,7 @@ are some common tasks:
 
 List all XMP data from a file:
 
-    $exiv -px <file>
+    $ exiv2 -px <file>
 
 Extract XMP data from a file <image>.<ext> to <image>.xmp:
 

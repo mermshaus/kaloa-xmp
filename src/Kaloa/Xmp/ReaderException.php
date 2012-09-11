@@ -9,6 +9,9 @@ namespace Kaloa\Xmp;
 
 use Kaloa\Xmp\XmpException;
 
+/**
+ * Type-hintable exception for issues with the Reader class.
+ */
 class ReaderException extends XmpException
 {
 

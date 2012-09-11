@@ -9,6 +9,9 @@ namespace Kaloa\Xmp;
 
 use Exception;
 
+/**
+ * Type-hintable base exception for this component.
+ */
 class XmpException extends Exception
 {
 
