@@ -7,9 +7,9 @@
 
 namespace Kaloa\Xmp;
 
-use Kaloa\Xmp\XmpException;
+use Exception;
 
-class ReaderException extends XmpException
+class XmpException extends Exception
 {
 
 }

@@ -1,9 +1,17 @@
 <?php
+/**
+ * Kaloa Library (http://www.kaloa.org/)
+ *
+ * @license http://www.kaloa.org/license.txt MIT License
+ */
 
 namespace Kaloa\Xmp;
 
 use DOMDocument;
-use RuntimeException;
+use ErrorException;
+use Exception;
+
+use Kaloa\Xmp\Document as XmpDocument;
 use Kaloa\Xmp\ReaderException;
 
 /**
@@ -11,106 +19,137 @@ use Kaloa\Xmp\ReaderException;
  */
 class Reader
 {
+    private $tokenFrom = '<x:xmpmeta';
+    private $tokenTo   = '</x:xmpmeta>';
+    private $chunkSize = 1024;
+    private $buffer;
+    private $started;
+    private $ended;
+    private $delimPos;
+    private $fromLen;
+    private $toLen;
+
+    public function __construct()
+    {
+        $this->reset();
+    }
+
+    private function reset()
+    {
+        $this->buffer = '';
+        $this->started = false;
+        $this->ended = false;
+        $this->fromLen = strlen($this->tokenFrom);
+        $this->toLen = strlen($this->tokenTo);
+        $this->delimPos = 0;
+    }
+
+    private function notStarted($char)
+    {
+        if ($char === $this->tokenFrom[$this->delimPos]) {
+            $this->delimPos++;
+            if ($this->delimPos === $this->fromLen) {
+                $this->delimPos = 0;
+                $this->started = true;
+            }
+        } elseif ($char === $this->tokenFrom[0]) {
+            $this->delimPos = 1;
+        } else {
+            $this->delimPos = 0;
+        }
+    }
+
+    private function started($char)
+    {
+        $this->buffer .= $char;
+        if ($char === $this->tokenTo[$this->delimPos]) {
+            $this->delimPos++;
+            if ($this->delimPos === $this->toLen) {
+                $this->ended = true;
+            }
+        } elseif ($char === $this->tokenTo[0]) {
+            $this->delimPos = 1;
+        } else {
+            $this->delimPos = 0;
+        }
+    }
+
     /**
      *
-     * @param string $filename
+     * @param resource $stream A stream resource
      * @return string
      */
-    protected function getXmpData($filename)
+    private function getXmpData($stream)
     {
-        if (!is_readable($filename)) {
-            throw new RuntimeException('Could not open file for reading');
-        }
+        while (!feof($stream)) {
+            $chunk = fread($stream, $this->chunkSize);
 
-        if (($file_pointer = fopen($filename, 'r')) === FALSE) {
-            throw new RuntimeException('Could not open file for reading (should be readable though)');
-        }
-
-        $finfo = finfo_open(FILEINFO_MIME_TYPE);
-
-        if ('image/jpeg' !== finfo_file($finfo, $filename)) {
-            finfo_close($finfo);
-            throw new RuntimeException('File is not image/jpeg');
-        }
-        finfo_close($finfo);
-
-        $from = '<x:xmpmeta';
-        $to   = '</x:xmpmeta>';
-
-        $chunk_size = 1024;
-        $buffer = '';
-        $started = false;
-        $ended = false;
-
-        $fromLen = strlen($from);
-        $toLen = strlen($to);
-
-        $delimPos = 0;
-
-        while (!feof($file_pointer)) {
-            $chunk = fread($file_pointer, $chunk_size);
             foreach (str_split($chunk) as $char) {
-                if (!$started) {
-                    if ($char === $from[$delimPos]) {
-                        $delimPos++;
-                        if ($delimPos === $fromLen) {
-                            $delimPos = 0;
-                            $started = true;
-                        }
-                    } else if ($char === $from[0]) {
-                        $delimPos = 1;
-                    } else {
-                        $delimPos = 0;
-                    }
+                if (!$this->started) {
+
+                    $this->notStarted($char);
+
                 } else {
-                    $buffer .= $char;
-                    if ($char === $to[$delimPos]) {
-                        $delimPos++;
-                        if ($delimPos === $toLen) {
-                            $ended = true;
-                            break 2;
-                        }
-                    } else if ($char === $to[0]) {
-                        $delimPos = 1;
-                    } else {
-                        $delimPos = 0;
+                    $this->started($char);
+
+                    if ($this->ended) {
+                        break 2;
                     }
                 }
             }
         }
 
-        if ($started && $ended) {
-            $buffer = $from . $buffer;
+        if ($this->started && $this->ended) {
+            $this->buffer = $this->tokenFrom . $this->buffer;
         } else {
-            $buffer = '';
+            $this->buffer = '';
         }
-
-        fclose($file_pointer);
-
-        return $buffer;
     }
 
     /**
      * Returns XMP data
      *
-     * @param string $filename
-     * @return DOMDocument
+     * @todo The method of error handling (set_error_handler) is just insane.
+     *
+     * @param resource $stream A stream resource
+     * @return XmpDocument
      * @throws ReaderException
      */
-    public function getXmpDocument($filename)
+    public function getXmpDocument($stream)
     {
-        $rawXmp = $this->getXmpData($filename);
-
-        #echo '<pre>' . htmlspecialchars($rawXmp) . '</pre>';
-
-        if ($rawXmp === '') {
-            throw new ReaderException('Document is not set');
+        if (!is_resource($stream) || get_resource_type($stream) !== 'stream') {
+            throw new ReaderException('$stream is not a valid stream resource');
         }
 
-        $dom = new DOMDocument();
-        $dom->loadXML($rawXmp);
+        $this->getXmpData($stream);
 
-        $xmpDoc = new Document($dom);
+        if ($this->buffer === '') {
+            $this->reset();
+            throw new ReaderException('No XMP document found in stream');
+        }
+
+
+        set_error_handler(function($errno, $errstr, $errfile, $errline) {
+            throw new ErrorException($errstr, $errno, 0, $errfile, $errline);
+        });
+
+        try {
+            $dom = new DOMDocument();
+            $dom->loadXML($this->buffer);
+        } catch (Exception $e) {
+            // Finally
+            restore_error_handler();
+            $this->reset();
+
+            throw new ReaderException($e->getMessage());
+        }
+
+        // Finally
+        restore_error_handler();
+        $this->reset();
+
+
+        $xmpDoc = new XmpDocument($dom);
 
         return $xmpDoc;
     }

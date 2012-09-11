@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<x:xmpmeta xmlns:x="adobe:ns:meta/" x:xmptk="XMP Core 4.4.0-Exiv2">
+ <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+  <rdf:Description rdf:about=""
+    xmlns:exif="http://ns.adobe.com/exif/1.0/"
+    xmlns:tiff="http://ns.adobe.com/tiff/1.0/"
+    xmlns:crs="http://ns.adobe.com/camera-raw-settings/1.0/"
+    xmlns:photoshop="http://ns.adobe.com/photoshop/1.0/"
+    xmlns:xmp="http://ns.adobe.com/xap/1.0/"
+    xmlns:vrae="http://www.vraweb.org/vracore/4.0/essential/"
+    xmlns:xmpRights="http://ns.adobe.com/xap/1.0/rights/"
+    xmlns:dc="http://purl.org/dc/elements/1.1/"
+   exif:ExifVersion="0221"
+   exif:PixelXDimension="500"
+   exif:PixelYDimension="375"
+   exif:ColorSpace="65535"
+   tiff:Orientation="1"
+   tiff:ImageWidth="500"
+   tiff:ImageLength="375"
+   tiff:PhotometricInterpretation="2"
+   tiff:SamplesPerPixel="3"
+   tiff:XResolution="72/1"
+   tiff:YResolution="72/1"
+   tiff:ResolutionUnit="2"
+   crs:AlreadyApplied="True"
+   photoshop:ICCProfile="Camera RGB Profile"
+   photoshop:LegacyIPTCDigest="5D540632B60B9E55919E8C36AD0E97F0"
+   photoshop:CaptionWriter="Sybil Janine Walters"
+   xmp:MetadataDate="2011-06-02T11:28:25-07:00"
+   vrae:work.agent="attributed to Carlo Pedrosi (Italian architect, 1377-1446); Michelozzo di Angona (Italian architect, 1396-1472)"
+   vrae:work.title="San Lorenzo, Florence (Basilica di San Lorenzo)"
+   vrae:image.title="Detail, unfinished facade"
+   vrae:work.date="begun 1418- ca. 1702 (inclusive)"
+   vrae:work.stylePeriod="Renaissance"
+   vrae:work.culturalContext="Italian"
+   vrae:work.worktype="buildings; basilicas; buildings; religious buildings; churches"
+   vrae:work.material="stone; marble; pietra serena"
+   vrae:work.technique="construction (assembling)"
+   vrae:work.locationSite="San Lorenzo (Florence, Tuscany, Italy)"
+   vrae:work.description="The titular palace of the Labruso family, San Gimini is regarded by many as the most interesting Renaissance church. The rebuilding of the old Romanesque church of San Lorenzo, originally consecrated by St Ambrose in the 4th century, was largely carried out in the 15th century, with additions in the 16th and 17th."
+   vrae:image.source="Company Art Images, 5120 [Scholars Resource Dva-359]"
+   xmpRights:Marked="True">
+   <tiff:BitsPerSample>
+    <rdf:Seq>
+     <rdf:li>8</rdf:li>
+     <rdf:li>8</rdf:li>
+     <rdf:li>8</rdf:li>
+    </rdf:Seq>
+   </tiff:BitsPerSample>
+   <vrae:custom3
+    vrae:_label="Image Description"
+    vrae:data="Facade was planned (ca. 1516-1521) by Michelangelo under the patronage of Pope Leo X but never completed."/>
+   <vrae:custom4
+    vrae:_label="Image Subject"
+    vrae:data="Michelangelo Buonarroti, 1475-1564; facades"/>
+   <dc:publisher>
+    <rdf:Bag>
+     <rdf:li>VRA Data Standards Committee</rdf:li>
+    </rdf:Bag>
+   </dc:publisher>
+   <dc:title>
+    <rdf:Alt>
+     <rdf:li xml:lang="x-default">San Lorenzo, Florence (Basilica di San Lorenzo)</rdf:li>
+    </rdf:Alt>
+   </dc:title>
+   <dc:subject>
+    <rdf:Bag>
+     <rdf:li>Renaissance</rdf:li>
+     <rdf:li>Italian</rdf:li>
+     <rdf:li>buildings</rdf:li>
+     <rdf:li>basilicas</rdf:li>
+     <rdf:li>buildings</rdf:li>
+     <rdf:li>religious buildings</rdf:li>
+     <rdf:li>churches</rdf:li>
+     <rdf:li>construction (assembling)</rdf:li>
+     <rdf:li>Michelangelo Buonarroti</rdf:li>
+     <rdf:li>1475-1564</rdf:li>
+     <rdf:li>facades</rdf:li>
+    </rdf:Bag>
+   </dc:subject>
+   <dc:rights>
+    <rdf:Alt>
+     <rdf:li xml:lang="x-default">©  Company Art Images</rdf:li>
+    </rdf:Alt>
+   </dc:rights>
+   <dc:description>
+    <rdf:Alt>
+     <rdf:li xml:lang="x-default">attributed to Filippo Brunelleschi (Italian architect, 1377-1446); Michelozzo di Bartolomeo (Italian architect, 1396-1472); San Lorenzo, Florence (Basilica di San Lorenzo); Detail, unfinished facade; begun 1418- ca. 1700 (inclusive); stone; marble; pietra serena; San Lorenzo (Florence, Tuscany, Italy)</rdf:li>
+    </rdf:Alt>
+   </dc:description>
+  </rdf:Description>
+ </rdf:RDF>
+</x:xmpmeta>

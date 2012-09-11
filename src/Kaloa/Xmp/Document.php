@@ -1,11 +1,17 @@
 <?php
+/**
+ * Kaloa Library (http://www.kaloa.org/)
+ *
+ * @license http://www.kaloa.org/license.txt MIT License
+ */
 
 namespace Kaloa\Xmp;
 
-use DateTime;
 use DOMDocument;
-use DOMNode;
 use DOMXPath;
+
+use Kaloa\Xmp\Properties\DublinCoreProperties;
+use Kaloa\Xmp\Properties\ExifProperties;
 
 /**
  *
@@ -17,28 +23,19 @@ class Document
      *
      * @var DOMDocument $dom
      */
-    protected $dom;
+    private $dom;
 
     /**
-     * Document's tags
      *
-     * @var array $tags
+     * @var DublinCoreProperties
      */
-    protected $tags;
+    private $dublinCoreProperties;
 
     /**
-     * DC title from XMP data
      *
-     * @var string $title
+     * @var ExifProperties
      */
-    protected $title;
-
-    /**
-     * Supposed to reflect creation time of associated resource
-     *
-     * @var DateTime $exifDateTimeOriginal
-     */
-    protected $exifDateTimeOriginal;
+    private $exifProperties;
 
     /**
      *
@@ -47,68 +44,31 @@ class Document
     public function __construct(DOMDocument $dom)
     {
         $this->dom   = $dom;
-        $this->tags  = array();
-        $this->title = '';
-        $this->exifDateTimeOriginal = '';
 
-        $this->process();
-    }
+        $xPath = new DOMXPath($dom);
+        $xPath->registerNamespace('dc', 'http://purl.org/dc/elements/1.1/');
+        $xPath->registerNamespace('rdf', 'http://www.w3.org/1999/02/22-rdf-syntax-ns#');
+        $xPath->registerNamespace('exif', 'http://ns.adobe.com/exif/1.0/');
 
-    /**
-     * Compiles raw XMP XML data into a format easier to work with
-     */
-    protected function process()
-    {
-        $xp = new DOMXPath($this->dom);
-        $xp->registerNamespace('dc', 'http://purl.org/dc/elements/1.1/');
-        $xp->registerNamespace('rdf', 'http://www.w3.org/1999/02/22-rdf-syntax-ns#');
-        $xp->registerNamespace('exif', 'http://ns.adobe.com/exif/1.0/');
-
-        foreach ($xp->query('//dc:title//rdf:li') as $node) {
-            $this->title = $node->nodeValue;
-        }
-
-        foreach ($xp->query('//rdf:Description') as $node) {
-            /* @var $node DOMNode */
-            if ($node->hasAttributes()) {
-                $attribute = $node->attributes->getNamedItemNS(
-                        'http://ns.adobe.com/exif/1.0/', 'DateTimeOriginal');
-
-                $this->exifDateTimeOriginal = ($attribute !== null)
-                        ? DateTime::createFromFormat('U', strtotime($attribute->nodeValue))
-                        : null;
-            }
-        }
-
-        foreach ($xp->query('//dc:subject//rdf:li') as $node) {
-            $this->tags[] = $node->nodeValue;
-        }
+        $this->dublinCoreProperties = new DublinCoreProperties($xPath);
+        $this->exifProperties = new ExifProperties($xPath);
     }
 
     /**
      *
-     * @return array
+     * @return DublinCoreProperties
      */
-    public function getTags()
+    public function getDublinCoreProperties()
     {
-        return $this->tags;
+        return $this->dublinCoreProperties;
     }
 
     /**
      *
-     * @return string
+     * @return ExifProperties
      */
-    public function getTitle()
+    public function getExifProperties()
     {
-        return $this->title;
-    }
-
-    /**
-     *
-     * @return int
-     */
-    public function getExifDateTimeOriginal()
-    {
-        return $this->exifDateTimeOriginal;
+        return $this->exifProperties;
     }
 }

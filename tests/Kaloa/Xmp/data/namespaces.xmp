@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<x:xmpmeta xmlns:x="adobe:ns:meta/" x:xmptk="XMP Core 4.4.0-Exiv2">
+ <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+  <rdf:Description rdf:about=""
+    xmlns:foo="http://ns.adobe.com/exif/1.0/"
+    xmlns:tiff="http://ns.adobe.com/tiff/1.0/"
+    xmlns:crs="http://ns.adobe.com/camera-raw-settings/1.0/"
+    xmlns:photoshop="http://ns.adobe.com/photoshop/1.0/"
+    xmlns:xmp="http://ns.adobe.com/xap/1.0/"
+    xmlns:vrae="http://www.vraweb.org/vracore/4.0/essential/"
+    xmlns:xmpRights="http://ns.adobe.com/xap/1.0/rights/"
+    xmlns:bar="http://purl.org/dc/elements/1.1/"
+   foo:ExifVersion="0221"
+   foo:PixelXDimension="500"
+   foo:PixelYDimension="375"
+   foo:ColorSpace="65535"
+   tiff:Orientation="1"
+   tiff:ImageWidth="500"
+   tiff:ImageLength="375"
+   tiff:PhotometricInterpretation="2"
+   tiff:SamplesPerPixel="3"
+   tiff:XResolution="72/1"
+   tiff:YResolution="72/1"
+   tiff:ResolutionUnit="2"
+   xmpRights:Marked="True">
+   <tiff:BitsPerSample>
+    <rdf:Seq>
+     <rdf:li>8</rdf:li>
+     <rdf:li>8</rdf:li>
+     <rdf:li>8</rdf:li>
+    </rdf:Seq>
+   </tiff:BitsPerSample>
+   <bar:publisher>
+    <rdf:Bag>
+     <rdf:li>VRA Data Standards Committee</rdf:li>
+    </rdf:Bag>
+   </bar:publisher>
+   <bar:title>
+    <rdf:Alt>
+     <rdf:li xml:lang="x-default">San Lorenzo, Florence (Basilica di San Lorenzo)</rdf:li>
+    </rdf:Alt>
+   </bar:title>
+   <bar:subject>
+    <rdf:Bag>
+     <rdf:li>Renaissance</rdf:li>
+     <rdf:li>Italian</rdf:li>
+     <rdf:li>buildings</rdf:li>
+     <rdf:li>basilicas</rdf:li>
+     <rdf:li>buildings</rdf:li>
+     <rdf:li>religious buildings</rdf:li>
+     <rdf:li>churches</rdf:li>
+     <rdf:li>construction (assembling)</rdf:li>
+     <rdf:li>Michelangelo Buonarroti</rdf:li>
+     <rdf:li>1475-1564</rdf:li>
+     <rdf:li>facades</rdf:li>
+    </rdf:Bag>
+   </bar:subject>
+   <bar:rights>
+    <rdf:Alt>
+     <rdf:li xml:lang="x-default">©  Company Art Images</rdf:li>
+    </rdf:Alt>
+   </bar:rights>
+   <bar:description>
+    <rdf:Alt>
+     <rdf:li xml:lang="x-default">attributed to Filippo Brunelleschi (Italian architect, 1377-1446); Michelozzo di Bartolomeo (Italian architect, 1396-1472); San Lorenzo, Florence (Basilica di San Lorenzo); Detail, unfinished facade; begun 1418- ca. 1700 (inclusive); stone; marble; pietra serena; San Lorenzo (Florence, Tuscany, Italy)</rdf:li>
+    </rdf:Alt>
+   </bar:description>
+  </rdf:Description>
+ </rdf:RDF>
+</x:xmpmeta>
