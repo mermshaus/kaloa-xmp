@@ -1,4 +1,4 @@
-Kaloa Library for PHP -- Xmp
+# Kaloa Library for PHP -- Xmp
 
 The package as a whole is published under the MIT License. See LICENSE for full
 license info.
@@ -6,32 +6,37 @@ license info.
 http://www.kaloa.org/
 
 
-Quality assurance
-=================
+## Quality assurance
 
 Run all tools from this file's directory. The tools need to be available on your
 system.
 
 Unit tests:
 
-    $ phpunit .
-    $ phpunit --testdox .
+~~~ bash
+$ phpunit
+~~~
 
 Code analysis:
 
-    $ phpmd ./src text codesize,design,naming
+~~~ bash
+$ phpmd ./src text codesize,design,naming
+~~~
 
 
-Package-specfic notes
-=====================
+## Package-specfic notes
 
 exiv2 <http://www.exiv2.org/> is a useful tool to work with image files. Here
 are some common tasks:
 
 List all XMP data from a file:
 
-    $ exiv2 -px <file>
+~~~ bash
+$ exiv2 -px <file>
+~~~
 
 Extract XMP data from a file <image>.<ext> to <image>.xmp:
 
-    $ exiv2 -eX <image>.<ext>
+~~~ bash
+$ exiv2 -eX <image>.<ext>
+~~~
