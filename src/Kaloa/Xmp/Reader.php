@@ -223,7 +223,12 @@ class Reader
 
         try {
             $dom = new DOMDocument();
-            $dom->loadXML($this->buffer);
+            $ret = $dom->loadXML($this->buffer);
+
+            // Added to make testErroneousXmpDataThrowsException work with hhvm
+            if (false === $ret) {
+                throw new Exception('loadXML returned false.');
+            }
         } catch (Exception $e) {
             // Finally
             restore_error_handler();
