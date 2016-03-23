@@ -1,27 +1,27 @@
 <?php
-/**
- * Kaloa Library (http://www.kaloa.org/)
+
+/*
+ * This file is part of the kaloa/xmp package.
  *
- * @license http://www.kaloa.org/license.txt MIT License
+ * For full copyright and license information, please view the LICENSE file
+ * that was distributed with this source code.
  */
 
 namespace Kaloa\Tests;
 
 use DateTime;
-use PHPUnit_Framework_TestCase;
-
-use Kaloa\Xmp\Document as XmpDocument;
-use Kaloa\Xmp\Reader as XmpReader;
-
 use Kaloa\Xmp\Properties\DublinCoreProperties;
 use Kaloa\Xmp\Properties\ExifProperties;
+use Kaloa\Xmp\Reader;
+use Kaloa\Xmp\ReaderException;
+use PHPUnit_Framework_TestCase;
 
 /**
  *
  */
 class DocumentTest extends PHPUnit_Framework_TestCase
 {
-    protected function formatOutputDc(DublinCoreProperties $prop)
+    private function formatOutputDc(DublinCoreProperties $prop)
     {
         $lines = array();
 
@@ -61,7 +61,7 @@ class DocumentTest extends PHPUnit_Framework_TestCase
         return implode("\n", $lines) . "\n";
     }
 
-    protected function formatOutputExif(ExifProperties $prop)
+    private function formatOutputExif(ExifProperties $prop)
     {
         $lines = array();
 
@@ -103,7 +103,7 @@ class DocumentTest extends PHPUnit_Framework_TestCase
             'namespaces'
         );
 
-        $xmpReader = new XmpReader();
+        $xmpReader = new Reader();
 
         foreach ($provider as $name) {
             $stream = fopen(__DIR__ . '/data/' . $name . '.xmp', 'rb');
@@ -118,34 +118,31 @@ class DocumentTest extends PHPUnit_Framework_TestCase
         }
     }
 
-    /**
-     * @expectedException Kaloa\Xmp\ReaderException
-     */
     public function testErroneousXmpDataThrowsException()
     {
-        $xmpReader = new XmpReader();
+        $this->setExpectedException(ReaderException::class);
+
+        $xmpReader = new Reader();
         $stream = fopen(__DIR__ . '/data/err-incomplete.xmp', 'rb');
         $xmpReader->getXmpDocument($stream);
         fclose($stream);
     }
 
-    /**
-     * @expectedException Kaloa\Xmp\ReaderException
-     */
     public function testMissingXmpDataThrowsException()
     {
-        $xmpReader = new XmpReader();
+        $this->setExpectedException(ReaderException::class);
+
+        $xmpReader = new Reader();
         $stream = fopen(__DIR__ . '/data/err-notfound.xmp', 'rb');
         $xmpReader->getXmpDocument($stream);
         fclose($stream);
     }
 
-    /**
-     * @expectedException Kaloa\Xmp\ReaderException
-     */
     public function testInvalidStreamThrowsException()
     {
-        $xmpReader = new XmpReader();
+        $this->setExpectedException(ReaderException::class);
+
+        $xmpReader = new Reader();
         $xmpReader->getXmpDocument(false);
     }
 }

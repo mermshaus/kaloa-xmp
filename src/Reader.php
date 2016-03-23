@@ -1,8 +1,10 @@
 <?php
-/**
- * Kaloa Library (http://www.kaloa.org/)
+
+/*
+ * This file is part of the kaloa/xmp package.
  *
- * @license http://www.kaloa.org/license.txt MIT License
+ * For full copyright and license information, please view the LICENSE file
+ * that was distributed with this source code.
  */
 
 namespace Kaloa\Xmp;
@@ -10,7 +12,6 @@ namespace Kaloa\Xmp;
 use DOMDocument;
 use ErrorException;
 use Exception;
-
 use Kaloa\Xmp\Document as XmpDocument;
 use Kaloa\Xmp\ReaderException;
 
