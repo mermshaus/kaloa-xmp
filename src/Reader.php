@@ -38,7 +38,7 @@ class Reader
      *
      * @var string
      */
-    private $tokenEnd   = '</x:xmpmeta>';
+    private $tokenEnd = '</x:xmpmeta>';
 
     /**
      * Size (in bytes) of data chunks read from the stream.
