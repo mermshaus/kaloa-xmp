@@ -120,7 +120,7 @@ class DocumentTest extends PHPUnit_Framework_TestCase
 
     public function testErroneousXmpDataThrowsException()
     {
-        $this->setExpectedException(ReaderException::class);
+        $this->setExpectedException('Kaloa\\Xmp\\ReaderException');
 
         $xmpReader = new Reader();
         $stream = fopen(__DIR__ . '/data/err-incomplete.xmp', 'rb');
@@ -130,7 +130,7 @@ class DocumentTest extends PHPUnit_Framework_TestCase
 
     public function testMissingXmpDataThrowsException()
     {
-        $this->setExpectedException(ReaderException::class);
+        $this->setExpectedException('Kaloa\\Xmp\\ReaderException');
 
         $xmpReader = new Reader();
         $stream = fopen(__DIR__ . '/data/err-notfound.xmp', 'rb');
@@ -140,7 +140,7 @@ class DocumentTest extends PHPUnit_Framework_TestCase
 
     public function testInvalidStreamThrowsException()
     {
-        $this->setExpectedException(ReaderException::class);
+        $this->setExpectedException('Kaloa\\Xmp\\ReaderException');
 
         $xmpReader = new Reader();
         $xmpReader->getXmpDocument(false);
