@@ -1,27 +1,33 @@
 {
-    "name": "kaloa/xmp",
-    "type": "library",
-    "description": "An XMP (Extensible Metadata Platform) reader component",
-    "keywords": ["xmp"],
-    "license": "MIT",
-    "authors": [
-        {
-            "name": "Marc Ermshaus",
-            "email": "marc@ermshaus.org",
-            "homepage": "https://www.ermshaus.org/"
-        }
-    ],
-    "require": {
-        "php": ">=5.3.0"
-    },
-    "require-dev": {
-        "phpunit/phpunit": "~4.0",
-        "squizlabs/php_codesniffer": "^2.8.1",
-        "phpmd/phpmd": "~2.0"
-    },
-    "autoload": {
-        "psr-4": {
-            "Kaloa\\Xmp\\": "src"
-        }
+  "name": "kaloa/xmp",
+  "type": "library",
+  "description": "XMP (Extensible Metadata Platform) reader component",
+  "keywords": [
+    "xmp"
+  ],
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Marc Ermshaus",
+      "email": "marc@ermshaus.org",
+      "homepage": "https://www.ermshaus.org/"
     }
+  ],
+  "require": {
+    "php": ">=8.2"
+  },
+  "require-dev": {
+    "phpunit/phpunit": "^11.5",
+    "phpstan/phpstan": "^2.2"
+  },
+  "autoload": {
+    "psr-4": {
+      "Kaloa\\Xmp\\": "src"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "Kaloa\\Xmp\\Tests\\": "tests/Kaloa/Xmp"
+    }
+  }
 }

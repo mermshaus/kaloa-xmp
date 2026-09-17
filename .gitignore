@@ -1,4 +1,6 @@
-build
-nbproject
-vendor
-composer.lock
+/.idea
+/build
+/nbproject
+/vendor
+/.phpunit.result.cache
+/composer.lock

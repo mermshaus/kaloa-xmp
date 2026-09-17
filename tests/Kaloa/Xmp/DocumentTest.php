@@ -7,19 +7,19 @@
  * that was distributed with this source code.
  */
 
-namespace Kaloa\Tests;
+namespace Kaloa\Xmp\Tests;
 
 use DateTime;
 use Kaloa\Xmp\Properties\DublinCoreProperties;
 use Kaloa\Xmp\Properties\ExifProperties;
 use Kaloa\Xmp\Reader;
 use Kaloa\Xmp\ReaderException;
-use PHPUnit_Framework_TestCase;
+use PHPUnit\Framework\TestCase;
 
 /**
  *
  */
-class DocumentTest extends PHPUnit_Framework_TestCase
+class DocumentTest extends TestCase
 {
     private function formatOutputDc(DublinCoreProperties $prop)
     {
@@ -120,7 +120,7 @@ class DocumentTest extends PHPUnit_Framework_TestCase
 
     public function testErroneousXmpDataThrowsException()
     {
-        $this->setExpectedException('Kaloa\\Xmp\\ReaderException');
+        $this->expectException('Kaloa\\Xmp\\ReaderException');
 
         $xmpReader = new Reader();
         $stream = fopen(__DIR__ . '/data/err-incomplete.xmp', 'rb');
@@ -130,7 +130,7 @@ class DocumentTest extends PHPUnit_Framework_TestCase
 
     public function testMissingXmpDataThrowsException()
     {
-        $this->setExpectedException('Kaloa\\Xmp\\ReaderException');
+        $this->expectException('Kaloa\\Xmp\\ReaderException');
 
         $xmpReader = new Reader();
         $stream = fopen(__DIR__ . '/data/err-notfound.xmp', 'rb');
@@ -140,7 +140,7 @@ class DocumentTest extends PHPUnit_Framework_TestCase
 
     public function testInvalidStreamThrowsException()
     {
-        $this->setExpectedException('Kaloa\\Xmp\\ReaderException');
+        $this->expectException('Kaloa\\Xmp\\ReaderException');
 
         $xmpReader = new Reader();
         $xmpReader->getXmpDocument(false);
