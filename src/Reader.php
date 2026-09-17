@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of the kaloa/xmp package.
  *
@@ -13,7 +15,6 @@ use DOMDocument;
 use ErrorException;
 use Exception;
 use Kaloa\Xmp\Document as XmpDocument;
-use Kaloa\Xmp\ReaderException;
 
 /**
  * Extracts an XMP document from a data stream.
@@ -28,45 +29,33 @@ class Reader
 {
     /**
      * Start token of XMP data.
-     *
-     * @var string
      */
-    private $tokenStart = '<x:xmpmeta';
+    private string $tokenStart = '<x:xmpmeta';
 
     /**
      * End token of XMP data.
-     *
-     * @var string
      */
-    private $tokenEnd = '</x:xmpmeta>';
+    private string $tokenEnd = '</x:xmpmeta>';
 
     /**
      * Size (in bytes) of data chunks read from the stream.
-     *
-     * @var int
      */
-    private $chunkSize = 1024;
+    private int $chunkSize = 1024;
 
     /**
      * Buffer to construct XMP data in.
-     *
-     * @var string
      */
-    private $buffer;
+    private string $buffer;
 
     /**
      * True if $tokenStart has been found.
-     *
-     * @var bool
      */
-    private $started;
+    private bool $started;
 
     /**
      * True if $started and $tokenEnd has been found.
-     *
-     * @var bool
      */
-    private $ended;
+    private bool $ended;
 
     /**
      * Counts how many characters of the token that is currently searched for
@@ -78,28 +67,19 @@ class Reader
      *
      * This variable is needed because a token might be split over two chunks of
      * input data so that functions such as strpos aren't sufficient.
-     *
-     * @var int
      */
-    private $delimPos;
+    private int $delimPos;
 
     /**
      * Length (in byte) of $tokenStart.
-     *
-     * @var int
      */
-    private $tokenStartLen;
+    private int $tokenStartLen;
 
     /**
      * Length (in byte) of $tokenEnd.
-     *
-     * @var int
      */
-    private $tokenEndLen;
+    private int $tokenEndLen;
 
-    /**
-     * Initializes the instance.
-     */
     public function __construct()
     {
         $this->reset();
@@ -108,7 +88,7 @@ class Reader
     /**
      * Resets instance data to clean starting state.
      */
-    private function reset()
+    private function reset(): void
     {
         $this->buffer = '';
         $this->started = false;
@@ -123,7 +103,7 @@ class Reader
      *
      * @param string $char A single byte
      */
-    private function searchForTokenStart($char)
+    private function searchForTokenStart(string $char): void
     {
         if ($char === $this->tokenStart[$this->delimPos]) {
             $this->delimPos++;
@@ -143,7 +123,7 @@ class Reader
      *
      * @param string $char A single byte
      */
-    private function searchForTokenEnd($char)
+    private function searchForTokenEnd(string $char): void
     {
         $this->buffer .= $char;
         if ($char === $this->tokenEnd[$this->delimPos]) {
@@ -169,7 +149,7 @@ class Reader
      *
      * @param resource $stream A stream resource
      */
-    private function getXmpData($stream)
+    private function getXmpData($stream): void
     {
         while (!feof($stream)) {
             $chunk = fread($stream, $this->chunkSize);
@@ -201,10 +181,10 @@ class Reader
      * @todo The method of error handling (set_error_handler) is just insane.
      *
      * @param resource $stream A stream resource
-     * @return XmpDocument
+     *
      * @throws ReaderException
      */
-    public function getXmpDocument($stream)
+    public function getXmpDocument($stream): XmpDocument
     {
         if (!is_resource($stream) || get_resource_type($stream) !== 'stream') {
             throw new ReaderException('$stream is not a valid stream resource');
@@ -217,8 +197,7 @@ class Reader
             throw new ReaderException('No XMP document found in stream');
         }
 
-
-        set_error_handler(function($errno, $errstr, $errfile, $errline) {
+        set_error_handler(function ($errno, $errstr, $errfile, $errline) {
             throw new ErrorException($errstr, $errno, 0, $errfile, $errline);
         });
 
@@ -227,7 +206,7 @@ class Reader
             $ret = $dom->loadXML($this->buffer);
 
             // Added to make testErroneousXmpDataThrowsException work with hhvm
-            if (false === $ret) {
+            if ($ret === false) {
                 throw new Exception('loadXML returned false.');
             }
         } catch (Exception $e) {
@@ -242,9 +221,6 @@ class Reader
         restore_error_handler();
         $this->reset();
 
-
-        $xmpDoc = new XmpDocument($dom);
-
-        return $xmpDoc;
+        return new XmpDocument($dom);
     }
 }

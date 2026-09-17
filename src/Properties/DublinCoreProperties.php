@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of the kaloa/xmp package.
  *
@@ -8,8 +10,6 @@
  */
 
 namespace Kaloa\Xmp\Properties;
-
-use Kaloa\Xmp\Properties\AbstractProperties;
 
 /**
  * Extracts the Dublin Core properties from an XMP document referenced by an
@@ -29,113 +29,83 @@ class DublinCoreProperties extends AbstractProperties
 {
     /**
      * See getContributor.
-     *
-     * @var array
      */
-    private $contributor = array();
+    private array $contributor = [];
 
     /**
      * See getCoverage.
-     *
-     * @var string
      */
-    private $coverage = '';
+    private string $coverage = '';
 
     /**
      * See getCreator.
-     *
-     * @var array
      */
-    private $creator = array();
+    private array $creator = [];
 
     /**
      * See getDate.
-     *
-     * @var array
      */
-    private $date = array();
+    private array $date = [];
 
     /**
      * See getDescription.
-     *
-     * @var array
      */
-    private $description = array();
+    private array $description = [];
 
     /**
      * See getFormat.
-     *
-     * @var string
      */
-    private $format = '';
+    private string $format = '';
 
     /**
      * See getIdentifier.
-     *
-     * @var string
      */
-    private $identifier = '';
+    private string $identifier = '';
 
     /**
      * See getLanguage.
-     *
-     * @var array
      */
-    private $language = array();
+    private array $language = [];
 
     /**
      * See getPublisher.
-     *
-     * @var array
      */
-    private $publisher = array();
+    private array $publisher = [];
 
     /**
      * See getRelation.
-     *
-     * @var array
      */
-    private $relation = array();
+    private array $relation = [];
 
     /**
      * See getRights.
-     *
-     * @var array
      */
-    private $rights = array();
+    private array $rights = [];
 
     /**
      * See getSource.
-     *
-     * @var string
      */
-    private $source = '';
+    private string $source = '';
 
     /**
      * See getSubject.
-     *
-     * @var array
      */
-    private $subject = array();
+    private array $subject = [];
 
     /**
      * See getTitle.
-     *
-     * @var array
      */
-    private $title = array();
+    private array $title = [];
 
     /**
      * See getType.
-     *
-     * @var array
      */
-    private $type = array();
+    private array $type = [];
 
     /**
      * Retrieves all properties from the underlying XMP document.
      */
-    final protected function init()
+    final protected function init(): void
     {
         $this->contributor = $this->getArray('contributor');
 
@@ -183,20 +153,14 @@ class DublinCoreProperties extends AbstractProperties
                 $this->title[] = $node->nodeValue;
             }
         }
-
-        // Free our reference to the XPath instance.
-        $this->xPath = null;
     }
 
     /**
      * Returns the values of all occurrences of an entity.
-     *
-     * @param string $entity
-     * @return array
      */
-    private function getArray($entity)
+    private function getArray(string $entity): array
     {
-        $tmp = array();
+        $tmp = [];
 
         foreach ($this->xPath->query('//dc:' . $entity . '//rdf:li') as $node) {
             $tmp[] = $node->nodeValue;
@@ -207,10 +171,8 @@ class DublinCoreProperties extends AbstractProperties
 
     /**
      * Returns contributors to the resource (other than the authors).
-     *
-     * @return array
      */
-    public function getContributor()
+    public function getContributor(): array
     {
         return $this->contributor;
     }
@@ -219,10 +181,8 @@ class DublinCoreProperties extends AbstractProperties
      * Returns the spatial or temporal topic of the resource, the spatial
      * applicability of the resource, or the jurisdiction under which the
      * resource is relevant.
-     *
-     * @return string
      */
-    public function getCoverage()
+    public function getCoverage(): string
     {
         return $this->coverage;
     }
@@ -230,20 +190,16 @@ class DublinCoreProperties extends AbstractProperties
     /**
      * Returns the authors of the resource (listed in order of precedence, if
      * significant).
-     *
-     * @return array
      */
-    public function getCreator()
+    public function getCreator(): array
     {
         return $this->creator;
     }
 
     /**
      * Returns date(s) that something interesting happened to the resource.
-     *
-     * @return array
      */
-    public function getDate()
+    public function getDate(): array
     {
         return $this->date;
     }
@@ -252,10 +208,8 @@ class DublinCoreProperties extends AbstractProperties
      * Returns a textual description of the content of the resource.
      *
      * Multiple values may be present for different languages.
-     *
-     * @return array
      */
-    public function getDescription()
+    public function getDescription(): array
     {
         return $this->description;
     }
@@ -265,10 +219,8 @@ class DublinCoreProperties extends AbstractProperties
      *
      * Tools and applications should set this property to the save format of the
      * data. It may include appropriate qualifiers.
-     *
-     * @return string
      */
-    public function getFormat()
+    public function getFormat(): string
     {
         return $this->format;
     }
@@ -278,20 +230,16 @@ class DublinCoreProperties extends AbstractProperties
      *
      * Recommended best practice is to identify the resource by means of a
      * string conforming to a formal identification system.
-     *
-     * @return string
      */
-    public function getIdentifier()
+    public function getIdentifier(): string
     {
         return $this->identifier;
     }
 
     /**
      * Returns an unordered array specifying the languages used in the resource.
-     *
-     * @return array
      */
-    public function getLanguage()
+    public function getLanguage(): array
     {
         return $this->language;
     }
@@ -301,10 +249,8 @@ class DublinCoreProperties extends AbstractProperties
      *
      * Examples of a Publisher include a person, an organization, or a service.
      * Typically, the name of a Publisher should be used to indicate the entity.
-     *
-     * @return array
      */
-    public function getPublisher()
+    public function getPublisher(): array
     {
         return $this->publisher;
     }
@@ -314,10 +260,8 @@ class DublinCoreProperties extends AbstractProperties
      *
      * Recommended best practice is to identify the related resource by means of
      * a string conforming to a formal identification system.
-     *
-     * @return array
      */
-    public function getRelation()
+    public function getRelation(): array
     {
         return $this->relation;
     }
@@ -328,10 +272,8 @@ class DublinCoreProperties extends AbstractProperties
      * Typically, rights information includes a statement about various property
      * rights associated with the resource, including intellectual property
      * rights.
-     *
-     * @return array
      */
-    public function getRights()
+    public function getRights(): array
     {
         return $this->rights;
     }
@@ -339,10 +281,8 @@ class DublinCoreProperties extends AbstractProperties
     /**
      * Returns the Unique identifier of the work from which this resource was
      * derived.
-     *
-     * @return string
      */
-    public function getSource()
+    public function getSource(): string
     {
         return $this->source;
     }
@@ -350,10 +290,8 @@ class DublinCoreProperties extends AbstractProperties
     /**
      * Returns an unordered array of descriptive phrases or keywords that
      * specify the topic of the content of the resource.
-     *
-     * @return array
      */
-    public function getSubject()
+    public function getSubject(): array
     {
         return $this->subject;
     }
@@ -362,20 +300,16 @@ class DublinCoreProperties extends AbstractProperties
      * Returns the title of the document, or the name given to the resource.
      *
      * Typically, it will be a name by which the resource is formally known.
-     *
-     * @return array
      */
-    public function getTitle()
+    public function getTitle(): array
     {
         return $this->title;
     }
 
     /**
      * Returns a document type; for example, novel, poem, or working paper.
-     *
-     * @return array
      */
-    public function getType()
+    public function getType(): array
     {
         return $this->type;
     }

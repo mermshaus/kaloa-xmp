@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of the kaloa/xmp package.
  *
@@ -11,7 +13,6 @@ namespace Kaloa\Xmp;
 
 use DOMDocument;
 use DOMXPath;
-
 use Kaloa\Xmp\Properties\DublinCoreProperties;
 use Kaloa\Xmp\Properties\ExifProperties;
 
@@ -41,49 +42,22 @@ use Kaloa\Xmp\Properties\ExifProperties;
 class Document
 {
     /**
-     * Original XMP XML data.
-     *
-     * @var DOMDocument $dom
-     */
-    private $dom;
-
-    /**
      * DublinCore schema properties found in the XMP document.
-     *
-     * @var DublinCoreProperties
      */
-    private $dublinCoreProperties;
+    private DublinCoreProperties $dublinCoreProperties;
 
     /**
      * Exif schema properties found in the XMP document.
-     *
-     * @var ExifProperties
      */
-    private $exifProperties;
+    private ExifProperties $exifProperties;
 
-    /**
-     * Initializes the instance.
-     *
-     * @param DOMDocument $dom XMP document
-     */
     public function __construct(DOMDocument $dom)
     {
-        $this->dom = $dom;
-
         $xPath = new DOMXPath($dom);
 
-        $xPath->registerNamespace(
-            'dc',
-            'http://purl.org/dc/elements/1.1/'
-        );
-        $xPath->registerNamespace(
-            'rdf',
-            'http://www.w3.org/1999/02/22-rdf-syntax-ns#'
-        );
-        $xPath->registerNamespace(
-            'exif',
-            'http://ns.adobe.com/exif/1.0/'
-        );
+        $xPath->registerNamespace('dc', 'http://purl.org/dc/elements/1.1/');
+        $xPath->registerNamespace('rdf', 'http://www.w3.org/1999/02/22-rdf-syntax-ns#');
+        $xPath->registerNamespace('exif', 'http://ns.adobe.com/exif/1.0/');
 
         $this->dublinCoreProperties = new DublinCoreProperties($xPath);
         $this->exifProperties = new ExifProperties($xPath);
@@ -91,20 +65,16 @@ class Document
 
     /**
      * Returns Dublin Core (DC) schema properties found in the document.
-     *
-     * @return DublinCoreProperties
      */
-    public function getDublinCoreProperties()
+    public function getDublinCoreProperties(): DublinCoreProperties
     {
         return $this->dublinCoreProperties;
     }
 
     /**
      * Returns EXIF schema properties found in the document.
-     *
-     * @return ExifProperties
      */
-    public function getExifProperties()
+    public function getExifProperties(): ExifProperties
     {
         return $this->exifProperties;
     }

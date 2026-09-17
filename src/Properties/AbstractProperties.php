@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of the kaloa/xmp package.
  *
@@ -18,15 +20,11 @@ abstract class AbstractProperties
 {
     /**
      * XPath instance for a Kaloa\Xmp\Document.
-     *
-     * @var DOMXPath
      */
-    protected $xPath;
+    protected DOMXPath $xPath;
 
     /**
      * Initializes the instance.
-     *
-     * @param DOMXPath $xPath XPath instance for a Kaloa\Xmp\Document
      */
     public function __construct(DOMXPath $xPath)
     {
@@ -39,5 +37,5 @@ abstract class AbstractProperties
      * Implementing classes should place initialization code here rather than
      * overwriting __construct.
      */
-    abstract protected function init();
+    abstract protected function init(): void;
 }

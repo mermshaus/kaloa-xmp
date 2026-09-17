@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of the kaloa/xmp package.
  *
@@ -13,29 +15,25 @@ use DateTime;
 use Kaloa\Xmp\Properties\DublinCoreProperties;
 use Kaloa\Xmp\Properties\ExifProperties;
 use Kaloa\Xmp\Reader;
-use Kaloa\Xmp\ReaderException;
 use PHPUnit\Framework\TestCase;
 
-/**
- *
- */
 class DocumentTest extends TestCase
 {
-    private function formatOutputDc(DublinCoreProperties $prop)
+    private function formatOutputDc(DublinCoreProperties $prop): string
     {
-        $lines = array();
+        $lines = [];
 
         $f = function ($what, $isArray = true) use ($prop, &$lines) {
             $methodName = 'get' . $what;
 
             if ($isArray) {
-                foreach ($prop->$methodName() as $tmp) {
+                foreach ($prop->{$methodName}() as $tmp) {
                     if ($tmp !== null && $tmp !== '') {
                         $lines[] = 'Xmp.dc.' . $what . ': ' . $tmp;
                     }
                 }
             } else {
-                $tmp = $prop->$methodName();
+                $tmp = $prop->{$methodName}();
                 if ($tmp !== null && $tmp !== '') {
                     $lines[] = 'Xmp.dc.' . $what . ': ' . $tmp;
                 }
@@ -61,25 +59,25 @@ class DocumentTest extends TestCase
         return implode("\n", $lines) . "\n";
     }
 
-    private function formatOutputExif(ExifProperties $prop)
+    private function formatOutputExif(ExifProperties $prop): string
     {
-        $lines = array();
+        $lines = [];
 
         $f = function ($what, $isArray = true) use ($prop, &$lines) {
             $methodName = 'get' . $what;
 
             if ($isArray) {
-                foreach ($prop->$methodName() as $tmp) {
+                foreach ($prop->{$methodName}() as $tmp) {
                     if ($tmp !== null && $tmp !== '') {
                         $lines[] = 'Xmp.exif.' . $what . ': ' . $tmp;
                     }
                 }
             } else {
-                $tmp = $prop->$methodName();
+                $tmp = $prop->{$methodName}();
 
                 if ($tmp !== null && $tmp !== '') {
                     if ($tmp instanceof DateTime) {
-                        $tmp = $tmp->format('Y-m-d\TH:i:s.uP');
+                        $tmp = $tmp->format('Y-m-d\\TH:i:s.uP');
                     }
 
                     $lines[] = 'Xmp.exif.' . $what . ': ' . $tmp;
@@ -95,13 +93,9 @@ class DocumentTest extends TestCase
         return implode("\n", $lines) . "\n";
     }
 
-    public function testXmpDataCanBeProcessed()
+    public function testXmpDataCanBeProcessed(): void
     {
-        $provider = array(
-            'example005',
-            'louisiana-ng',
-            'namespaces'
-        );
+        $provider = ['example005', 'louisiana-ng', 'namespaces'];
 
         $xmpReader = new Reader();
 
@@ -110,15 +104,16 @@ class DocumentTest extends TestCase
             $xmpDocument = $xmpReader->getXmpDocument($stream);
             fclose($stream);
 
-            $test = $this->formatOutputDc($xmpDocument->getDublinCoreProperties())
-                    . "\n"
-                    . $this->formatOutputExif($xmpDocument->getExifProperties());
+            $test =
+                $this->formatOutputDc($xmpDocument->getDublinCoreProperties()) .
+                "\n" .
+                $this->formatOutputExif($xmpDocument->getExifProperties());
 
             $this->assertEquals(file_get_contents(__DIR__ . '/data/' . $name . '.expected'), $test);
         }
     }
 
-    public function testErroneousXmpDataThrowsException()
+    public function testErroneousXmpDataThrowsException(): void
     {
         $this->expectException('Kaloa\\Xmp\\ReaderException');
 
@@ -128,7 +123,7 @@ class DocumentTest extends TestCase
         fclose($stream);
     }
 
-    public function testMissingXmpDataThrowsException()
+    public function testMissingXmpDataThrowsException(): void
     {
         $this->expectException('Kaloa\\Xmp\\ReaderException');
 
@@ -138,7 +133,7 @@ class DocumentTest extends TestCase
         fclose($stream);
     }
 
-    public function testInvalidStreamThrowsException()
+    public function testInvalidStreamThrowsException(): void
     {
         $this->expectException('Kaloa\\Xmp\\ReaderException');
 

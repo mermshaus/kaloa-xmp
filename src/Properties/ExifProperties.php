@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of the kaloa/xmp package.
  *
@@ -10,6 +12,7 @@
 namespace Kaloa\Xmp\Properties;
 
 use DateTime;
+use DateTimeInterface;
 use DOMNode;
 
 /**
@@ -25,54 +28,32 @@ class ExifProperties extends AbstractProperties
 {
     /**
      * See getDateTimeOriginal.
-     *
-     * @var DateTime|null
      */
-    private $dateTimeOriginal = null;
+    private ?DateTime $dateTimeOriginal = null;
 
     /**
      * See getExifVersion.
-     *
-     * @var string
      */
-    private $exifVersion = '';
+    private string $exifVersion = '';
 
     /**
      * See getPixelXDimension.
-     *
-     * @var string
      */
-    private $pixelXDimension = '';
+    private string $pixelXDimension = '';
 
     /**
      * See getPixelYDimension.
-     *
-     * @var string
      */
-    private $pixelYDimension = '';
+    private string $pixelYDimension = '';
 
-    /**
-     * Tries to fill an entity instance variable with corresponding data from
-     * the XMP document.
-     *
-     * Exif data might be added either as attributes or as independent elements.
-     * This method checks for both. If both types are found, element content
-     * will overwrite attribute content.
-     *
-     * @param string $entity
-     */
-    private function fill($entity)
+    private function read(string $entity): string
     {
         $value = '';
-        $whatLcfirst = lcfirst($entity);
 
         foreach ($this->xPath->query('//rdf:Description') as $node) {
             /* @var $node DOMNode */
             if ($node->hasAttributes()) {
-                $attribute = $node->attributes->getNamedItemNS(
-                    'http://ns.adobe.com/exif/1.0/',
-                    $entity
-                );
+                $attribute = $node->attributes->getNamedItemNS('http://ns.adobe.com/exif/1.0/', $entity);
 
                 if ($attribute !== null) {
                     $value = $attribute->nodeValue;
@@ -86,21 +67,35 @@ class ExifProperties extends AbstractProperties
             }
         }
 
+        return $value;
+    }
+
+    /**
+     * Tries to fill an entity instance variable with corresponding data from
+     * the XMP document.
+     *
+     * Exif data might be added either as attributes or as independent elements.
+     * This method checks for both. If both types are found, element content
+     * will overwrite attribute content.
+     */
+    private function fill(string $entity): void
+    {
+        $whatLcfirst = lcfirst($entity);
+
+        $value = $this->read($entity);
+
         $this->{$whatLcfirst} = $value;
     }
 
     /**
      * Retrieves all properties from the underlying XMP document.
      */
-    final protected function init()
+    final protected function init(): void
     {
-        $this->fill('DateTimeOriginal');
+        $dateTimeOriginalRaw = $this->read('DateTimeOriginal');
 
-        if (trim($this->dateTimeOriginal) !== '') {
-            $this->dateTimeOriginal = DateTime::createFromFormat(
-                'Y-m-d\TH:i:s.uP',
-                $this->dateTimeOriginal
-            );
+        if (trim($dateTimeOriginalRaw) !== '') {
+            $this->dateTimeOriginal = DateTime::createFromFormat('Y-m-d\\TH:i:s.uP', $dateTimeOriginalRaw);
         } else {
             $this->dateTimeOriginal = null;
         }
@@ -108,48 +103,37 @@ class ExifProperties extends AbstractProperties
         $this->fill('ExifVersion');
         $this->fill('PixelXDimension');
         $this->fill('PixelYDimension');
-
-        // Free our reference to the XPath instance.
-        $this->xPath = null;
     }
 
     /**
      * Returns date and time when original image was generated, in ISO 8601
      * format.
-     *
-     * @return DateTime|null
      */
-    public function getDateTimeOriginal()
+    public function getDateTimeOriginal(): ?DateTimeInterface
     {
         return $this->dateTimeOriginal;
     }
 
     /**
      * Returns the EXIF version number.
-     *
-     * @return string
      */
-    public function getExifVersion()
+    public function getExifVersion(): string
     {
         return $this->exifVersion;
     }
 
     /**
      * Return the image width, in pixels.
-     *
-     * @return string
      */
-    public function getPixelXDimension()
+    public function getPixelXDimension(): string
     {
         return $this->pixelXDimension;
     }
 
     /**
      * Returns the image height, in pixels.
-     *
-     * @return string
      */
-    public function getPixelYDimension()
+    public function getPixelYDimension(): string
     {
         return $this->pixelYDimension;
     }
