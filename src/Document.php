@@ -39,7 +39,7 @@ use Kaloa\Xmp\Properties\ExifProperties;
  * printf("Image tags: %s\n", implode(', ', $dcProps->getSubject()));
  * </pre>
  */
-class Document
+final readonly class Document
 {
     /**
      * DublinCore schema properties found in the XMP document.

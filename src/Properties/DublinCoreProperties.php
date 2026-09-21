@@ -11,6 +11,11 @@ declare(strict_types=1);
 
 namespace Kaloa\Xmp\Properties;
 
+use DOMNameSpaceNode;
+use DOMNode;
+use DOMNodeList;
+use RuntimeException;
+
 /**
  * Extracts the Dublin Core properties from an XMP document referenced by an
  * XPath instance.
@@ -29,6 +34,8 @@ class DublinCoreProperties extends AbstractProperties
 {
     /**
      * See getContributor.
+     *
+     * @var list<string>
      */
     private array $contributor = [];
 
@@ -39,16 +46,22 @@ class DublinCoreProperties extends AbstractProperties
 
     /**
      * See getCreator.
+     *
+     * @var list<string>
      */
     private array $creator = [];
 
     /**
      * See getDate.
+     *
+     * @var list<string>
      */
     private array $date = [];
 
     /**
      * See getDescription.
+     *
+     * @var list<string>
      */
     private array $description = [];
 
@@ -64,21 +77,29 @@ class DublinCoreProperties extends AbstractProperties
 
     /**
      * See getLanguage.
+     *
+     * @var list<string>
      */
     private array $language = [];
 
     /**
      * See getPublisher.
+     *
+     * @var list<string>
      */
     private array $publisher = [];
 
     /**
      * See getRelation.
+     *
+     * @var list<string>
      */
     private array $relation = [];
 
     /**
      * See getRights.
+     *
+     * @var list<string>
      */
     private array $rights = [];
 
@@ -89,18 +110,47 @@ class DublinCoreProperties extends AbstractProperties
 
     /**
      * See getSubject.
+     *
+     * @var list<string>
      */
     private array $subject = [];
 
     /**
      * See getTitle.
+     *
+     * @var list<string>
      */
     private array $title = [];
 
     /**
      * See getType.
+     *
+     * @var list<string>
      */
     private array $type = [];
+
+    /**
+     * @return DOMNodeList<DOMNode|DOMNameSpaceNode>
+     */
+    private function xPathWrapper(string $query): DOMNodeList
+    {
+        $candidate = $this->xPath->query($query);
+
+        if (!$candidate instanceof DOMNodeList) {
+            throw new RuntimeException(sprintf('XPath query "%s" did not return DOMNodeList.', $query));
+        }
+
+        return $candidate;
+    }
+
+    private function ensureString(mixed $string): string
+    {
+        if (!is_string($string)) {
+            throw new RuntimeException(sprintf('Expected string, "%s" given.', gettype($string)));
+        }
+
+        return $string;
+    }
 
     /**
      * Retrieves all properties from the underlying XMP document.
@@ -109,8 +159,8 @@ class DublinCoreProperties extends AbstractProperties
     {
         $this->contributor = $this->getArray('contributor');
 
-        foreach ($this->xPath->query('//dc:coverage') as $node) {
-            $this->coverage = $node->nodeValue;
+        foreach ($this->xPathWrapper('//dc:coverage') as $node) {
+            $this->coverage = $this->ensureString($node->nodeValue);
         }
 
         $this->creator = $this->getArray('creator');
@@ -119,14 +169,14 @@ class DublinCoreProperties extends AbstractProperties
 
         // Format
 
-        foreach ($this->xPath->query('//dc:format') as $node) {
-            $this->format = $node->nodeValue;
+        foreach ($this->xPathWrapper('//dc:format') as $node) {
+            $this->format = $this->ensureString($node->nodeValue);
         }
 
         // Identifier
 
-        foreach ($this->xPath->query('//dc:identifier') as $node) {
-            $this->identifier = $node->nodeValue;
+        foreach ($this->xPathWrapper('//dc:identifier') as $node) {
+            $this->identifier = $this->ensureString($node->nodeValue);
         }
 
         $this->language = $this->getArray('language');
@@ -136,8 +186,8 @@ class DublinCoreProperties extends AbstractProperties
 
         // Source
 
-        foreach ($this->xPath->query('//dc:source//rdf:li') as $node) {
-            $this->source = $node->nodeValue;
+        foreach ($this->xPathWrapper('//dc:source//rdf:li') as $node) {
+            $this->source = $this->ensureString($node->nodeValue);
         }
 
         // Subject
@@ -149,21 +199,23 @@ class DublinCoreProperties extends AbstractProperties
         $this->title = $this->getArray('title');
 
         if (count($this->title) === 0) {
-            foreach ($this->xPath->query('//dc:title') as $node) {
-                $this->title[] = $node->nodeValue;
+            foreach ($this->xPathWrapper('//dc:title') as $node) {
+                $this->title[] = $this->ensureString($node->nodeValue);
             }
         }
     }
 
     /**
      * Returns the values of all occurrences of an entity.
+     *
+     * @return list<string>
      */
     private function getArray(string $entity): array
     {
         $tmp = [];
 
-        foreach ($this->xPath->query('//dc:' . $entity . '//rdf:li') as $node) {
-            $tmp[] = $node->nodeValue;
+        foreach ($this->xPathWrapper('//dc:' . $entity . '//rdf:li') as $node) {
+            $tmp[] = $this->ensureString($node->nodeValue);
         }
 
         return $tmp;
@@ -171,6 +223,8 @@ class DublinCoreProperties extends AbstractProperties
 
     /**
      * Returns contributors to the resource (other than the authors).
+     *
+     * @return list<string>
      */
     public function getContributor(): array
     {
@@ -190,6 +244,8 @@ class DublinCoreProperties extends AbstractProperties
     /**
      * Returns the authors of the resource (listed in order of precedence, if
      * significant).
+     *
+     * @return list<string>
      */
     public function getCreator(): array
     {
@@ -198,6 +254,8 @@ class DublinCoreProperties extends AbstractProperties
 
     /**
      * Returns date(s) that something interesting happened to the resource.
+     *
+     * @return list<string>
      */
     public function getDate(): array
     {
@@ -208,6 +266,8 @@ class DublinCoreProperties extends AbstractProperties
      * Returns a textual description of the content of the resource.
      *
      * Multiple values may be present for different languages.
+     *
+     * @return list<string>
      */
     public function getDescription(): array
     {
@@ -238,6 +298,8 @@ class DublinCoreProperties extends AbstractProperties
 
     /**
      * Returns an unordered array specifying the languages used in the resource.
+     *
+     * @return list<string>
      */
     public function getLanguage(): array
     {
@@ -249,6 +311,8 @@ class DublinCoreProperties extends AbstractProperties
      *
      * Examples of a Publisher include a person, an organization, or a service.
      * Typically, the name of a Publisher should be used to indicate the entity.
+     *
+     * @return list<string>
      */
     public function getPublisher(): array
     {
@@ -260,6 +324,8 @@ class DublinCoreProperties extends AbstractProperties
      *
      * Recommended best practice is to identify the related resource by means of
      * a string conforming to a formal identification system.
+     *
+     * @return list<string>
      */
     public function getRelation(): array
     {
@@ -272,6 +338,8 @@ class DublinCoreProperties extends AbstractProperties
      * Typically, rights information includes a statement about various property
      * rights associated with the resource, including intellectual property
      * rights.
+     *
+     * @return list<string>
      */
     public function getRights(): array
     {
@@ -290,6 +358,8 @@ class DublinCoreProperties extends AbstractProperties
     /**
      * Returns an unordered array of descriptive phrases or keywords that
      * specify the topic of the content of the resource.
+     *
+     * @return list<string>
      */
     public function getSubject(): array
     {
@@ -300,6 +370,8 @@ class DublinCoreProperties extends AbstractProperties
      * Returns the title of the document, or the name given to the resource.
      *
      * Typically, it will be a name by which the resource is formally known.
+     *
+     * @return list<string>
      */
     public function getTitle(): array
     {
@@ -308,6 +380,8 @@ class DublinCoreProperties extends AbstractProperties
 
     /**
      * Returns a document type; for example, novel, poem, or working paper.
+     *
+     * @return list<string>
      */
     public function getType(): array
     {

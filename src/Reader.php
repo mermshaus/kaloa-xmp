@@ -15,6 +15,7 @@ use DOMDocument;
 use ErrorException;
 use Exception;
 use Kaloa\Xmp\Document as XmpDocument;
+use RuntimeException;
 
 /**
  * Extracts an XMP document from a data stream.
@@ -30,17 +31,19 @@ class Reader
     /**
      * Start token of XMP data.
      */
-    private string $tokenStart = '<x:xmpmeta';
+    private const TOKEN_START = '<x:xmpmeta';
 
     /**
      * End token of XMP data.
      */
-    private string $tokenEnd = '</x:xmpmeta>';
+    private const TOKEN_END = '</x:xmpmeta>';
 
     /**
      * Size (in bytes) of data chunks read from the stream.
+     *
+     * @var positive-int
      */
-    private int $chunkSize = 1024;
+    private const CHUNK_SIZE = 1024;
 
     /**
      * Buffer to construct XMP data in.
@@ -93,8 +96,8 @@ class Reader
         $this->buffer = '';
         $this->started = false;
         $this->ended = false;
-        $this->tokenStartLen = strlen($this->tokenStart);
-        $this->tokenEndLen = strlen($this->tokenEnd);
+        $this->tokenStartLen = strlen(self::TOKEN_START);
+        $this->tokenEndLen = strlen(self::TOKEN_END);
         $this->delimPos = 0;
     }
 
@@ -105,13 +108,13 @@ class Reader
      */
     private function searchForTokenStart(string $char): void
     {
-        if ($char === $this->tokenStart[$this->delimPos]) {
+        if ($char === self::TOKEN_START[$this->delimPos]) {
             $this->delimPos++;
             if ($this->delimPos === $this->tokenStartLen) {
                 $this->delimPos = 0;
                 $this->started = true;
             }
-        } elseif ($char === $this->tokenStart[0]) {
+        } elseif ($char === self::TOKEN_START[0]) {
             $this->delimPos = 1;
         } else {
             $this->delimPos = 0;
@@ -126,12 +129,12 @@ class Reader
     private function searchForTokenEnd(string $char): void
     {
         $this->buffer .= $char;
-        if ($char === $this->tokenEnd[$this->delimPos]) {
+        if ($char === self::TOKEN_END[$this->delimPos]) {
             $this->delimPos++;
             if ($this->delimPos === $this->tokenEndLen) {
                 $this->ended = true;
             }
-        } elseif ($char === $this->tokenEnd[0]) {
+        } elseif ($char === self::TOKEN_END[0]) {
             $this->delimPos = 1;
         } else {
             $this->delimPos = 0;
@@ -152,7 +155,11 @@ class Reader
     private function getXmpData($stream): void
     {
         while (!feof($stream)) {
-            $chunk = fread($stream, $this->chunkSize);
+            $chunk = fread($stream, self::CHUNK_SIZE);
+
+            if ($chunk === false) {
+                throw new RuntimeException('Unable to read data');
+            }
 
             foreach (str_split($chunk) as $char) {
                 if (!$this->started) {
@@ -168,7 +175,7 @@ class Reader
         }
 
         if ($this->started && $this->ended) {
-            $this->buffer = $this->tokenStart . $this->buffer;
+            $this->buffer = self::TOKEN_START . $this->buffer;
         } else {
             $this->buffer = '';
         }
@@ -197,7 +204,7 @@ class Reader
             throw new ReaderException('No XMP document found in stream');
         }
 
-        set_error_handler(function ($errno, $errstr, $errfile, $errline) {
+        set_error_handler(static function ($errno, $errstr, $errfile, $errline) {
             throw new ErrorException($errstr, $errno, 0, $errfile, $errline);
         });
 
@@ -207,7 +214,7 @@ class Reader
 
             // Added to make testErroneousXmpDataThrowsException work with hhvm
             if ($ret === false) {
-                throw new Exception('loadXML returned false.');
+                throw new RuntimeException('loadXML returned false.');
             }
         } catch (Exception $e) {
             // Finally

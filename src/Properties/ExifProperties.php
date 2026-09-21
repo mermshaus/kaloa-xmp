@@ -106,8 +106,7 @@ class ExifProperties extends AbstractProperties
     }
 
     /**
-     * Returns date and time when original image was generated, in ISO 8601
-     * format.
+     * Returns date and time when original image was generated.
      */
     public function getDateTimeOriginal(): ?DateTimeInterface
     {

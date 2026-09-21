@@ -1,6 +1,11 @@
 /.idea
+/.phpunit.cache
 /build
 /nbproject
 /vendor
+
 /.phpunit.result.cache
 /composer.lock
+
+# We're not including the XMP demo file because I don't want to figure out the copyright stuff
+/demo/metadata-test-file.jpg

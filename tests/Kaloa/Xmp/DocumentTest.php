@@ -12,18 +12,25 @@ declare(strict_types=1);
 namespace Kaloa\Xmp\Tests;
 
 use DateTime;
+use Kaloa\Xmp\Document;
 use Kaloa\Xmp\Properties\DublinCoreProperties;
 use Kaloa\Xmp\Properties\ExifProperties;
 use Kaloa\Xmp\Reader;
+use Kaloa\Xmp\ReaderException;
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
 
+#[CoversClass(Document::class)]
+#[CoversClass(DublinCoreProperties::class)]
+#[CoversClass(ExifProperties::class)]
+#[CoversClass(Reader::class)]
 class DocumentTest extends TestCase
 {
     private function formatOutputDc(DublinCoreProperties $prop): string
     {
         $lines = [];
 
-        $f = function ($what, $isArray = true) use ($prop, &$lines) {
+        $f = static function ($what, $isArray = true) use ($prop, &$lines) {
             $methodName = 'get' . $what;
 
             if ($isArray) {
@@ -63,7 +70,7 @@ class DocumentTest extends TestCase
     {
         $lines = [];
 
-        $f = function ($what, $isArray = true) use ($prop, &$lines) {
+        $f = static function ($what, $isArray = true) use ($prop, &$lines) {
             $methodName = 'get' . $what;
 
             if ($isArray) {
@@ -115,7 +122,7 @@ class DocumentTest extends TestCase
 
     public function testErroneousXmpDataThrowsException(): void
     {
-        $this->expectException('Kaloa\\Xmp\\ReaderException');
+        $this->expectException(ReaderException::class);
 
         $xmpReader = new Reader();
         $stream = fopen(__DIR__ . '/data/err-incomplete.xmp', 'rb');
@@ -125,7 +132,7 @@ class DocumentTest extends TestCase
 
     public function testMissingXmpDataThrowsException(): void
     {
-        $this->expectException('Kaloa\\Xmp\\ReaderException');
+        $this->expectException(ReaderException::class);
 
         $xmpReader = new Reader();
         $stream = fopen(__DIR__ . '/data/err-notfound.xmp', 'rb');
@@ -135,7 +142,7 @@ class DocumentTest extends TestCase
 
     public function testInvalidStreamThrowsException(): void
     {
-        $this->expectException('Kaloa\\Xmp\\ReaderException');
+        $this->expectException(ReaderException::class);
 
         $xmpReader = new Reader();
         $xmpReader->getXmpDocument(false);
